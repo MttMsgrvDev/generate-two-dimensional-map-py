@@ -23,6 +23,8 @@ class HeightMapGenerator:
 
    __random_scale: int
 
+   __step: int
+
    __map: list[list[int]]
 
    def __init__(self, x_axis_length: int, y_axis_length: int, min_height: int, max_height: int, random_scale: int) -> None:
@@ -34,12 +36,14 @@ class HeightMapGenerator:
 
       self.__working_axis_length = self.__get_closest_size(max(x_axis_length, y_axis_length))
 
+      self.__step = self.__working_axis_length
+
       self.__map = [[0 for _ in range(self.__working_axis_length)] for _ in range(self.__working_axis_length)]
 
    def generate_height_map(self) -> list[list[int]]:
       """Generates a height map with the given length of the x and y axes and the min and maximum heights.
       
-      :returns: A matrix that represents the generated hieght map.
+      :returns: A matrix that represents the generated height map.
       :rtype: list[list[int]]
       """
 
@@ -47,8 +51,20 @@ class HeightMapGenerator:
       pass
 
    def __diamond_step(self):
-      
+      value = 0
 
+      value += self.__map[0, 0]
+      value += self.__map[self.__step, 0]
+      value += self.__map[0, self.__step]
+      value += self.__map[self.__step, self.__step]
+
+      value /= 4
+
+      value += random.randint()
+
+      pass
+
+   def __square_step(self):
       pass
 
    def __get_closest_size(self, size: int) -> int:
