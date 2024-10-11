@@ -1,3 +1,13 @@
+"""Contains components needed to generate a height map.
+
+Classes
+-------
+
+HeightMapGenerator:
+    Generates a height map.
+
+"""
+
 import math
 import random
 
@@ -29,6 +39,24 @@ class HeightMapGenerator:
     __map: list[list[float]]
 
     def __init__(self, x_axis_length: int, y_axis_length: int, min_height: float, max_height: float, random_scale: float) -> None:
+        """Creates a new instance of HeightMapGenerator.
+
+        :param x_axis_length: The length of the x-axis of the height map to be generated.
+        :type x_axis_length: int
+
+        :param y_axis_length: The length of the y-axis of the height map to be generated.
+        :type y_axis_length: int
+
+        :param min_height: The minimum height allowed for any point on the height map.
+        :type min_height: float
+
+        :param max_height: The maximum height allowed for any point on the height map.
+        :type max_height: float
+
+        :param random_scale: A scale value used to generate random height differences on the map. Larger values result in larger differences.
+        :type random_scale: float
+        """
+
         self.__x_axis_length = x_axis_length
         self.__y_axis_length = y_axis_length
         self.__min_height = min_height
@@ -153,6 +181,12 @@ class HeightMapGenerator:
                                                    1] = random.uniform(self.__min_height, self.__max_height)
 
     def __crop_map(self) -> list[list[float]]:
+        """Crops the map to the desired size.
+
+        :returns: A matrix of the desired size.
+        :rtype: list[list[float]]
+        """
+
         cropped_map: list[list[float]] = []
 
         for y in range(self.__y_axis_length):
