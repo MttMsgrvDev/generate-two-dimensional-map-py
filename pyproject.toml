@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "height_map_generator_musg_io"
-version = "0.0.1"
+version = "0.0.2"
 authors = [{ name = "Matt Musgrove", email = "Matt@Musgrove.io" }]
 description = "Contains components needed to generate a height map."
 readme = "README.md"
