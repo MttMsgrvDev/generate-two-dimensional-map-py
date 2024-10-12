@@ -9,14 +9,15 @@ generate_height_map_image:
 """
 
 from PIL import Image
-from color_mapper import ColorMapper
+from .color_mapper import ColorMapper
+from .height_map import HeightMap
 
 
-def generate_height_map_image(map: list[list[float]], min_height: float, max_height: float, file_path: str):
+def generate_height_map_image(map: HeightMap, file_path: str):
     """Generates an image for a given height map.
 
     :param map: The height map to generate the image for.
-    :type map: list[list[float]]
+    :type map: HeightMap
 
     :param min_height: The minimum height of the height map.
     :type min_height: float
@@ -28,12 +29,9 @@ def generate_height_map_image(map: list[list[float]], min_height: float, max_hei
     :type file_path: str
     """
 
-    color_mapper = ColorMapper(min_height, max_height)
+    color_mapper = ColorMapper(map.min_height, map.max_height)
 
-    height = len(map)
-    width = len(map[0])
-
-    img = Image.new('L', (width, height))
+    img = Image.new('L', (map.x_axis_length, map.y_axis_length))
 
     colors = __flatten_map(color_mapper.map_colors(map))
 
@@ -41,11 +39,11 @@ def generate_height_map_image(map: list[list[float]], min_height: float, max_hei
     img.save(file_path)
 
 
-def __flatten_map(map: list[list[int]]) -> list[int]:
+def __flatten_map(map: HeightMap) -> list[int]:
     flat_list: list[int] = []
 
-    for row in map:
-        for cell in row:
-            flat_list.append(cell)
+    for y in range(map.y_axis_length):
+        for x in range(map.x_axis_length):
+            flat_list.append(map.get_height(x, y))
 
     return flat_list
