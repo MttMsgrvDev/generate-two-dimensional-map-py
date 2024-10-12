@@ -9,8 +9,8 @@ generate_height_map_image:
 """
 
 from PIL import Image
-from color_mapper import ColorMapper
-from height_map import HeightMap
+from .color_mapper import ColorMapper
+from .height_map import HeightMap
 
 
 def generate_height_map_image(map: HeightMap, file_path: str):

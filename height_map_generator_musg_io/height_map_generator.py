@@ -1,7 +1,7 @@
 import math
 import random
 
-from height_map import HeightMap
+from .height_map import HeightMap
 
 class HeightMapGenerator:
     """Generates a hight map.
