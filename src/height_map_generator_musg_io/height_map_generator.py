@@ -1,13 +1,3 @@
-"""Contains components needed to generate a height map.
-
-Classes
--------
-
-HeightMapGenerator:
-    Generates a height map.
-
-"""
-
 import math
 import random
 
@@ -17,6 +7,7 @@ class HeightMapGenerator:
 
     Functions
     ------------
+
     generate_height_map()
        Generates a height map.
 
