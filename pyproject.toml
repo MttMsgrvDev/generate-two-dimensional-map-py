@@ -16,5 +16,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/MttMsgrvDev/generate-two-dimensional-map-py"
-Issues = "https://github.com/MttMsgrvDev/generate-two-dimensional-map-py/issues"
+Homepage = "https://github.com/MttMsgrvDev/height-map-generator-lib-py"
+Issues = "https://github.com/MttMsgrvDev/height-map-generator-lib-py/issues"
