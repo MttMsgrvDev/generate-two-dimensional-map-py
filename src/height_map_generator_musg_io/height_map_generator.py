@@ -1,6 +1,7 @@
 import math
 import random
 
+from height_map import HeightMap
 
 class HeightMapGenerator:
     """Generates a hight map.
@@ -27,7 +28,7 @@ class HeightMapGenerator:
 
     __step: int
 
-    __map: list[list[float]]
+    __map: HeightMap
 
     def __init__(self, x_axis_length: int, y_axis_length: int, min_height: float, max_height: float, random_scale: float) -> None:
         """Creates a new instance of HeightMapGenerator.
@@ -59,10 +60,9 @@ class HeightMapGenerator:
 
         self.__step = self.__working_axis_length - 1
 
-        self.__map = [[0 for _ in range(self.__working_axis_length)] for _ in range(
-            self.__working_axis_length)]
+        self.__map = HeightMap(self.__working_axis_length, self.__working_axis_length, self.__min_height, self.__max_height)
 
-    def generate_height_map(self) -> list[list[float]]:
+    def generate_height_map(self) -> HeightMap:
         """Generates a height map with the given length of the x and y axes and the min and maximum heights.
 
         :returns: A matrix that represents the generated height map.
@@ -80,37 +80,33 @@ class HeightMapGenerator:
             self.__step //= 2
             self.__random_scale //= 2
 
-        return self.__crop_map()
+        return self.__map.crop(self.__x_axis_length, self.__y_axis_length)
 
     def __diamond_step(self):
         half = self.__step // 2
 
-        for x in range(half, self.__working_axis_length, self.__step):
-            for y in range(half, self.__working_axis_length, self.__step):
+        for y in range(half, self.__working_axis_length, self.__step):
+            for x in range(half, self.__working_axis_length, self.__step):
                 self.__do_diamond_step(x, y, half)
-
-        pass
 
     def __do_diamond_step(self, x: int, y: int, length: int):
 
         value: float = 0
 
-        value += self.__map[x - length][y - length]
-        value += self.__map[x + length][y - length]
-        value += self.__map[x - length][y + length]
-        value += self.__map[x + length][y + length]
+        value += self.__map.get_height(x - length, y - length)
+        value += self.__map.get_height(x + length, y - length)
+        value += self.__map.get_height(x - length, y + length)
+        value += self.__map.get_height(x + length, y + length)
 
         value /= 4
 
-        height = self.__generate_height_offset(value)
-
-        self.__map[x][y] = height
+        self.__map.set_height(x, y, self.__generate_height_offset(value))
 
     def __square_step(self):
         half = self.__step // 2
 
-        for x in range(0, self.__working_axis_length, half):
-            for y in range((x + half) % self.__step, self.__working_axis_length, self.__step):
+        for y in range(0, self.__working_axis_length, half):
+            for x in range((y + half) % self.__step, self.__working_axis_length, self.__step):
                 self.__do_square_step(x, y, half)
 
     def __do_square_step(self, x: int, y: int, length: int):
@@ -118,26 +114,24 @@ class HeightMapGenerator:
         count: int = 0
 
         if self.__is_valid_position(x - length, y):
-            value += self.__map[x - length][y]
+            value += self.__map.get_height(x - length, y)
             count += 1
 
         if self.__is_valid_position(x + length, y):
-            value += self.__map[x + length][y]
+            value += self.__map.get_height(x + length, y)
             count += 1
 
         if self.__is_valid_position(x, y - length):
-            value += self.__map[x][y - length]
+            value += self.__map.get_height(x, y - length)
             count += 1
 
         if self.__is_valid_position(x, y + length):
-            value += self.__map[x][y + length]
+            value += self.__map.get_height(x, y + length)
             count += 1
 
         value /= count
 
-        height = self.__generate_height_offset(value)
-
-        self.__map[x][y] = height
+        self.__map.set_height(x, y, self.__generate_height_offset(value))
 
     def __generate_height_offset(self, height: float):
 
@@ -163,28 +157,7 @@ class HeightMapGenerator:
         return x >= 0 and x < self.__working_axis_length and y >= 0 and y < self.__working_axis_length
 
     def __init_map(self):
-        self.__map[0][0] = random.uniform(self.__min_height, self.__max_height)
-        self.__map[0][self.__working_axis_length -
-                      1] = random.uniform(self.__min_height, self.__max_height)
-        self.__map[self.__working_axis_length -
-                   1][0] = random.uniform(self.__min_height, self.__max_height)
-        self.__map[self.__working_axis_length - 1][self.__working_axis_length -
-                                                   1] = random.uniform(self.__min_height, self.__max_height)
-
-    def __crop_map(self) -> list[list[float]]:
-        """Crops the map to the desired size.
-
-        :returns: A matrix of the desired size.
-        :rtype: list[list[float]]
-        """
-
-        cropped_map: list[list[float]] = []
-
-        for y in range(self.__y_axis_length):
-            new_row: list[float] = []
-            for x in range(self.__x_axis_length):
-                new_row.append(self.__map[x][y])
-
-            cropped_map.append(new_row)
-
-        return cropped_map
+        self.__map.set_height(0, 0, random.uniform(self.__min_height, self.__max_height))
+        self.__map.set_height(0, self.__working_axis_length - 1, random.uniform(self.__min_height, self.__max_height))
+        self.__map.set_height(self.__working_axis_length - 1, 0, random.uniform(self.__min_height, self.__max_height))
+        self.__map.set_height(self.__working_axis_length - 1, self.__working_axis_length - 1, random.uniform(self.__min_height, self.__max_height))
